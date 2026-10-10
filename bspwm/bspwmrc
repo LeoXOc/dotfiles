@@ -1,0 +1,74 @@
+#! /bin/sh
+
+xrandr --output Virtual-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output Virtual-2 --off --output Virtual-3 --off --output Virtual-4 --off --output Virtual-5 --off --output Virtual-6 --off --output Virtual-7 --off --output Virtual-8 --off
+
+pgrep -x sxhkd >/dev/null || sxhkd &
+
+# Agente de autenticación para permisos de administrador
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
+killall -q picom
+killall -q mpv
+killall -q cava
+
+systemctl --user restart pipewire-pulse wireplumber
+
+while pgrep -u $UID -x picom >/dev/null; do sleep 0.1; done
+picom -b &
+
+$HOME/.config/polybar/launch.sh &
+
+feh --bg-fill --randomize /usr/share/backgrounds/archlinux/*.{jpg,png} &
+
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+bspc config border_width 1
+bspc config window_gap 0
+bspc config split_ratio 0.55
+bspc config borderless_monocle true
+bspc config gapless_monocle true
+
+bspc rule -a t-btop desktop='^1'
+bspc rule -a t-clock desktop='^1' state=floating rectangle=240x150+1124+316 sticky=on layer=above focus=off
+bspc rule -a net-1 desktop='^2' focus=off
+bspc rule -a net-2 desktop='^2' focus=off
+bspc rule -a net-3 desktop='^2' focus=off
+bspc rule -a t3 desktop='^3' focus=off
+bspc rule -a t2 desktop='^4' focus=off
+bspc rule -a t1 desktop='^5' follow=on focus=on
+bspc rule -a Thunar desktop='^6' private=on focus=off
+bspc rule -a librewolf desktop='^7' private=on focus=off
+bspc rule -a t-cava desktop='^5' state=floating rectangle=240x150+1124+556 sticky=on layer=above focus=off
+bspc rule -a vlc desktop='^7' state=fullscreen sticky=on layer=below focus=off
+bspc rule -a Vivaldi-stable desktop='^8' private=on focus=off
+bspc rule -a Brave-browser desktop='^9' private=on focus=off
+bspc rule -a md.obsidian.Obsidian desktop='^10' state=fullscreen private=on focus=off
+# ==========================================
+# APLICACIONES AL INICIO
+# ==========================================
+
+# Lanzar la terminal principal solo si no existe esa clase específica
+sleep 1
+pgrep -f "kitty --class t-btop" >/dev/null || kitty --class t-btop sh -c "btop; exec bash" &
+pgrep -f "kitty --class t-clock" >/dev/null || kitty --class t-clock sh -c "peaclock; exec bash" &
+#pgrep -f "kitty --class t-matrix" > /dev/null || kitty --class t-matrix sh -c "cmatrix; exec bash" &
+sleep 1
+pgrep -f "kitty --class net-1" >/dev/null || kitty --class net-1 -d ~/.local/bin sh -c "nethogs; exec bash" &
+pgrep -f "kitty --class net-2" >/dev/null || kitty --class net-2 -d ~/.local/bin sh -c "nload wlan0; exec bash" &
+pgrep -f "kitty --class net-3" >/dev/null || kitty --class net-3 -d ~/.local/bin sh -c "slurm -i wlan0; exec bash" &
+sleep 1
+pgrep -f "kitty --class t1" >/dev/null || kitty --class t1 sh -c "sleep 7 && fastfetch && /home/user/.local/bin/color && ls; exec bash" &
+pgrep -f "kitty --class t2" >/dev/null || kitty --class t2 sh -c "ls -afH; exec bash" &
+pgrep -f "kitty --class t3" >/dev/null || kitty --class t3 -d ~/.local/bin sh -c "ls -lshF; exec bash" &
+pgrep -f "kitty --class t-cava" >/dev/null || kitty --class t-cava sh -c "cava; exec bash" &
+
+sleep 1
+
+(pgrep -f obsidian >/dev/null || obsidian) &
+(pgrep -f thunar >/dev/null || thunar) &
+(pgrep -f vivaldi >/dev/null || vivaldi) &
+(pgrep -f librewolf >/dev/null || librewolf) &
+
+sleep 7
+
+bspc desktop V -f
