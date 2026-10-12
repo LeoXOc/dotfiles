@@ -29,33 +29,21 @@ ln -sf "$DOTFILES_DIR/picom/picom.conf" "$CONFIG_DIR/picom/picom.conf"
 ln -sf "$DOTFILES_DIR/kitty/kitty.conf" "$CONFIG_DIR/kitty/kitty.conf"
 ln -sf "$DOTFILES_DIR/rofi/config.rasi" "$CONFIG_DIR/rofi/config.rasi"
 
+ln -sf "$DOTFILES_DIR/mpv/mpv.conf" "$CONFIG_DIR/mpv/mpv.conf"
+
+ln -sf "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
+ln -sf "$DOTFILES_DIR/vim/.vimrc" "$HOME/.vimrc"
+
 mkdir -p "$CONFIG_DIR"/nvim/lua/{config,plugins}
 
 ln -sf "$DOTFILES_DIR/nvim/init.lua" "$CONFIG_DIR/nvim/init.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/config/autocmds.lua" "$CONFIG_DIR/nvim/lua/config/autocmds.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/config/keymaps.lua" "$CONFIG_DIR/nvim/lua/config/keymaps.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/config/options.lua" "$CONFIG_DIR/nvim/lua/config/options.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/ai.lua" "$CONFIG_DIR/nvim/lua/plugins/ai.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/blink.lua" "$CONFIG_DIR/nvim/lua/plugins/blink.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/dap.lua" "$CONFIG_DIR/nvim/lua/plugins/dap.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/flash.lua" "$CONFIG_DIR/nvim/lua/plugins/flash.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/formatting.lua" "$CONFIG_DIR/nvim/lua/plugins/formatting.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/lsp.lua" "$CONFIG_DIR/nvim/lua/plugins/lsp.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/oil.lua" "$CONFIG_DIR/nvim/lua/plugins/oli.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/snacks.lua" "$CONFIG_DIR/nvim/lua/plugins/snacks.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/theme.lua" "$CONFIG_DIR/nvim/lua/plugins/theme.lua"
-ln -sf "$DOTFILES_DIR/nvim/lua/plugins/treesitter.lua" "$CONFIG_DIR/nvim/lua/plugins/treesitter.lua"
+ln -sf "$DOTFILES_DIR/nvim/lua/config/"* "$CONFIG_DIR/nvim/lua/config/"*
+ln -sf "$DOTFILES_DIR/nvim/lua/plugins/"* "$CONFIG_DIR/nvim/lua/plugins/"*
 
 # Otorgar permisos de ejecución obligatorios
 # Si bspwmrc no es ejecutable, el entorno gráfico no cargará (pantalla negra)
 chmod +x "$CONFIG_DIR/bspwm/bspwmrc"
 chmod +x "$CONFIG_DIR/polybar/launch.sh"
-
-# Establecer un fondo de pantalla inicial usando feh
-# Ideal para inicializar la imagen en layouts de múltiples monitores
-#if [ -f "$DOTFILES_DIR/wallpapers/default.jpg" ]; then
-#    feh --bg-fill "$DOTFILES_DIR/wallpapers/default.jpg"
-#fi
 
 # 1. Enlazar archivos que van directo en el $HOME
 ln -sf "$DOTFILES_DIR/bash/.bashrc" "$HOME/.bashrc"
@@ -91,7 +79,7 @@ echo "yay instalado correctamente."
 echo "Intalando paquetes de AUR"
 sleep 3
 
-yay -S --needed --noconfirm - <aur.txt
+yay -S --needed --noconfirm - <$HOME/dotfiles/aur.txt
 
 echo "Configurando plugins de Vim..."
 sleep 3

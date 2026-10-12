@@ -7,7 +7,6 @@ btop
 clamav
 clamtk
 dkms
-dunts
 fastfetch
 feh
 ffmpegthumbnailer
@@ -22,7 +21,6 @@ gst-plugins-base
 gst-plugins-good
 gst-plugins-ugly
 gvfs
-htop
 imagemagick
 jdupes
 kitty
@@ -69,8 +67,6 @@ rclone
 ripgrep
 rofi
 rsync
-smartmontools
-sqlite
 stylua
 thunar
 thunar-volman
@@ -82,20 +78,16 @@ ttf-firacode-nerd
 tumbler
 udiskie
 udisks2
-ufw
 unrar
 unzip
-vim
 vivaldi
 vivaldi-ffmpeg-codecs
 vlc
 vlc-plugins-all
 vlc-plugins-extra
 wmctrl
-wireplumber
 xclip
 xdg-user-dirs
 xdotool
-xorg-xrand
 yt-dlp
 zip

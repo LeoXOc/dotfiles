@@ -1,0 +1,290 @@
+#!/usr/bin/env bash
+
+###############################################################################
+# clip - Advanced Clipboard Utility
+#
+# A clean, extensible clipboard manager for Linux with:
+#
+# FEATURES
+# --------
+# ✔ Automatic Wayland / X11 detection
+# ✔ Text and image support
+# ✔ Copy from file or stdin
+# ✔ Paste and clear clipboard
+# ✔ Secure mode (auto-clear after timeout)
+# ✔ Run command and copy output
+# ✔ Copy current directory or file path
+# ✔ Clipboard info (X11)
+#
+# BACKEND
+# -------
+# Wayland  -> wl-copy / wl-paste
+# X11      -> xclip
+#
+# USAGE EXAMPLES
+# --------------
+#
+# Copy a file:
+#   clip copy file.txt
+#
+# Copy from pipe:
+#   ls -la | clip copy
+#
+# Paste clipboard:
+#   clip paste
+#
+# Clear clipboard:
+#   clip clear
+#
+# Secure copy (auto-clear after 30 seconds default):
+#   clip secure secret.txt
+#   clip secure secret.txt 15
+#
+# Run command and copy output
+#   clip run ls -la
+#
+# Copy current working directory:
+#   clip pwd
+#
+# Copy absolute path of file:
+#   clip path file.txt
+#
+# Show clipboard info (X11 only):
+#   clip info
+#
+###############################################################################
+
+set -euo pipefail
+
+#######################################
+# Backend detection
+#######################################
+detect_backend() {
+    if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] && command -v wl-copy &>/dev/null; then
+        COPY_CMD="wl-copy"
+        PASTE_CMD="wl-paste"
+        BACKEND="wayland"
+    elif command -v xclip &>/dev/null; then
+        COPY_CMD="xclip -selection clipboard"
+        PASTE_CMD="xclip -selection clipboard -o"
+        BACKEND="x11"
+    else
+        echo "No clipboard backend found (wl-copy or xclip)." >&2
+        exit 1
+    fi
+}
+
+#######################################
+# Core clipboard operations
+#######################################
+copy_stdin() {
+    eval $COPY_CMD
+}
+
+copy_file() {
+    local file="$1"
+
+    if [[ ! -f "$file" ]]; then
+        echo "File not found: $file" >&2
+        exit 1
+    fi
+
+    mime=$(file --mime-type -b "$file")
+
+    if [[ "$BACKEND" == "x11" && "$mime" == image/* ]]; then
+        xclip -selection clipboard -t "$mime" -i "$file"
+    elif [[ "$BACKEND" == "wayland" && "$mime" == image/* ]]; then
+        wl-copy < "$file"
+    else
+        cat "$file" | eval $COPY_CMD
+    fi
+}
+
+paste_clipboard() {
+    eval $PASTE_CMD
+}
+
+clear_clipboard() {
+    printf "" | eval $COPY_CMD
+}
+
+#######################################
+# Secure mode (auto clear after timeout)
+#######################################
+secure_copy() {
+    local file="$1"
+    local duration="${2:-30}"
+
+    copy_file "$file"
+
+    echo "Clipboard will clear in $duration seconds..."
+
+    (
+        sleep "$duration"
+        clear_clipboard
+        echo "Clipboard cleared."
+    ) &
+}
+
+#######################################
+# Run command and copy output
+#######################################
+run_and_copy() {
+    shift
+    "$@" | tee >(eval $COPY_CMD)
+}
+
+#######################################
+# Utilities
+#######################################
+copy_pwd() {
+    pwd | eval $COPY_CMD
+}
+
+copy_path() {
+    if [[ -z "${1:-}" ]]; then
+        echo "Specify a file." >&2
+        exit 1
+    fi
+    realpath "$1" | eval $COPY_CMD
+}
+
+info_clipboard() {
+    if [[ "$BACKEND" == "x11" ]]; then
+        xclip -selection clipboard -t TARGETS -o
+    else
+        echo "Wayland backend detected."
+    fi
+}
+
+copy_date() {
+    local d
+    d=$(date +%Y/%m/%d)
+    echo "$d"
+    echo "$d" | eval $COPY_CMD
+}
+
+copy_now() {
+    local d
+    d=$(date +"%Y/%m/%d %H:%M:%S")
+    echo "$d"
+    echo "$d" | eval $COPY_CMD
+}
+
+copy_iso() {
+    local d
+    d=$(date +"%Y%m%dT%H%M%S")
+    echo "$d"
+    echo "$d" | eval $COPY_CMD
+}
+
+copy_epoch() {
+    local d
+    d=$(date +%s)
+    echo "$d"
+    echo "$d" | eval $COPY_CMD
+}
+
+copy_stamp() {
+    local d
+    d=$(date +"%Y%m%d_%H%M%S")
+    echo "$d"
+    echo "$d" | eval $COPY_CMD
+}
+
+#######################################
+# Help
+#######################################
+show_help() {
+cat <<EOF
+clip - advanced clipboard utility
+
+Usage:
+  clip copy <file>
+  command | clip copy
+  clip paste
+  clip clear
+  clip secure <file> [seconds]
+  clip run <command>
+  clip pwd
+  clip path <file>
+  clip today
+  clip now
+  clip iso
+  clip epoch
+  clip stamp
+  clip info
+  clip help
+EOF
+}
+
+#######################################
+# Main
+#######################################
+main() {
+    detect_backend
+
+    case "${1:-help}" in
+        copy)
+            if [ ! -t 0 ]; then
+                copy_stdin
+            elif [[ -n "${2:-}" ]]; then
+                copy_file "$2"
+            else
+                echo "Nothing to copy." >&2
+                exit 1
+            fi
+            ;;
+        paste)
+            paste_clipboard
+            ;;
+        clear)
+            clear_clipboard
+            ;;
+        secure)
+            if [[ -z "${2:-}" ]]; then
+                echo "Specify file to secure copy." >&2
+                exit 1
+            fi
+            secure_copy "$2" "${3:-30}"
+            ;;
+        run)
+            run_and_copy "$@"
+            ;;
+        pwd)
+            copy_pwd
+            ;;
+        path)
+            copy_path "${2:-}"
+            ;;
+        info)
+            info_clipboard
+            ;;
+        today)
+            copy_date
+            ;;
+        now)
+            copy_now
+            ;;
+        iso)
+            copy_iso
+            ;;
+        epoch)
+            copy_epoch
+            ;;
+        stamp)
+            copy_stamp
+            ;;
+        help|--help|-h)
+            show_help
+            ;;
+        *)
+            echo "Unknown command: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
+

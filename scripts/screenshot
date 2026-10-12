@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# --- CONFIGURACIÓN DE CARPETAS ---
+FECHA_DIR=$(date +%Y/%m)
+NOMBRE_BASE=$(date +%Y%m%d.%H%M%S)
+DESTINO="$HOME/Screenshots/$FECHA_DIR"
+
+mkdir -p "$DESTINO"
+
+ARCHIVO_FINAL="$DESTINO/Screenshot_$NOMBRE_BASE.png"
+
+# 1. Capturar todas las pantallas y guardar el archivo (quitamos la flag -c)
+scrot -a $(bspc query -M -m focused --names | xargs -I {} bspc query -T -m {} | jq -r '.rectangle | "\(.x),\(.y),\(.width),\(.height)"')  "$ARCHIVO_FINAL"
+
+# Esperamos a que el archivo exista realmente en el disco (bucle inteligente)
+count=0
+while [ ! -f "$ARCHIVO_FINAL" ]; do
+    sleep 0.2
+    ((count++))
+    if [ $count -gt 25 ]; then 
+        notify-send "Error" "Tiempo de espera agotado al guardar la captura" -i "dialog-error"
+        exit 1
+    fi
+done
+
+# 2. Copiar al portapapeles usando wl-clipboard (nativo de Wayland)
+# Le inyectamos directamente el archivo de imagen al portapapeles
+#wl-copy -t image/png < "$ARCHIVO_FINAL"
+xclip -selection clipboard -t image/png -i "$ARCHIVO_FINAL"
+# 3. Notificación visual integrada
+notify-send "Captura Guardada" "Copiada al portapapeles\nCarpeta: $FECHA_DIR" -i "$ARCHIVO_FINAL" -a "Spectacle Script"
