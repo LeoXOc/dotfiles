@@ -1,0 +1,266 @@
+{
+    "app_config": {
+        "audio_config": {
+            "audio": "pipewire"
+        },
+        "bluetooth_config": {
+            "enabled": false
+        },
+        "firewall_config": {
+            "firewall": "ufw"
+        },
+        "fonts_config": {
+            "fonts": [
+                "noto-fonts-emoji"
+            ]
+        },
+        "print_service_config": {
+            "enabled": false
+        }
+    },
+    "archinstall_language": "English",
+    "auth_config": {},
+    "bootloader_config": {
+        "bootloader": "Grub",
+        "removable": false,
+        "uki": false
+    },
+    "custom_commands": [
+  	    "git clone https://github.com/LeoXOc/dotfiles.git /home/user/dotfiles",
+  	    "chown -R user:user /home/user/dotfiles",
+  	    "chmod +x /home/user/dotfiles/install.sh",
+  	    "echo 'user ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/temp_nopasswd",
+  	    "su - user -c 'bash /home/user/dotfiles/install.sh'",
+  	    "rm /etc/sudoers.d/temp_nopasswd"
+    ],
+    "disk_config": {
+        "btrfs_options": {
+            "snapshot_config": null
+        },
+        "config_type": "default_layout",
+        "device_modifications": [
+            {
+                "device": "/dev/sda",
+                "partitions": [
+                    {
+                        "btrfs": [],
+                        "dev_path": null,
+                        "flags": [
+                            "boot"
+                        ],
+                        "fs_type": "fat32",
+                        "mount_options": [],
+                        "mountpoint": "/boot",
+                        "obj_id": "2529da8b-bf83-4c19-bab4-628d9fc90777",
+                        "size": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "GiB",
+                            "value": 1
+                        },
+                        "start": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "MiB",
+                            "value": 1
+                        },
+                        "status": "create",
+                        "type": "primary"
+                    },
+                    {
+                        "btrfs": [],
+                        "dev_path": null,
+                        "flags": [],
+                        "fs_type": "ext4",
+                        "mount_options": [],
+                        "mountpoint": "/",
+                        "obj_id": "96538f43-46de-46ae-828e-b48370b5bfae",
+                        "size": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "B",
+                            "value": 31587303424
+                        },
+                        "start": {
+                            "sector_size": {
+                                "unit": "B",
+                                "value": 512
+                            },
+                            "unit": "B",
+                            "value": 1074790400
+                        },
+                        "status": "create",
+                        "type": "primary"
+                    }
+                ],
+                "wipe": true
+            }
+        ]
+    },
+    "hostname": "archlinux",
+    "kernels": [
+        "linux-lts"
+    ],
+    "locale_config": {
+        "console_font": "default8x16",
+        "kb_layout": "en",
+        "sys_enc": "UTF-8",
+        "sys_lang": "en_MX.UTF-8"
+    },
+    "mirror_config": {
+        "custom_repositories": [],
+        "custom_servers": [],
+        "mirror_regions": {
+            "United States": [
+                "https://losangeles.mirror.pkgbuild.com/$repo/os/$arch",
+                "https://mirrors.ocf.berkeley.edu/archlinux/$repo/os/$arch",
+                "https://arch.hu.fo/archlinux/$repo/os/$arch",
+                "https://mirror.arizona.edu/archlinux/$repo/os/$arch"
+            ],
+            "Mexico": [
+                "https://arch.jsc.mx/$repo/os/$arch"
+            ]
+        },
+        "optional_repositories": [
+            "multilib"
+        ]
+    },
+    "network_config": {
+        "type": "nm"
+    },
+    "ntp": false,
+    "packages": [
+        "7zip",
+        "android-tools",
+        "arandr",
+        "archlinux-wallpaper",
+        "base-devel",
+        "btop",
+        "clamav",
+        "clamtk",
+        "cava",
+        "dkms",
+        "fastfetch",
+        "feh",
+        "ffmpegthumbnailer",
+        "font-manager",
+        "gedit",
+        "gedit-plugins",
+        "git",
+        "gocryptfs",
+        "gst-libav",
+        "gst-plugins-bad",
+        "gst-plugins-base",
+        "gst-plugins-good",
+        "gst-plugins-ugly",
+        "gvfs",
+        "htop",
+        "imagemagick",
+        "jdupes",
+        "kaychain",
+        "kitty",
+        "kitty-shell-integration",
+        "kitty-terminfo",
+        "lazygit",
+        "libgsf",
+        "libreoffice-fresh-es",
+        "librewolf",
+        "luarocks",
+        "lxappearance",
+        "macchanger",
+        "man-db",
+        "materia-gtk-theme",
+        "mpv",
+        "neovim",
+        "nethogs",
+        "nload",
+        "ntfs-3g",
+        "obsidian",
+        "obsidian-icon-theme",
+        "otf-atkinsonhyperlegiblemono-nerd",
+        "otf-aurulent-nerd",
+        "otf-codenewroman-nerd",
+        "otf-comicshanns-nerd",
+        "otf-commit-mono-nerd",
+        "otf-droid-nerd",
+        "otf-firamono-nerd",
+        "otf-geist-mono-nerd",
+        "otf-hasklig-nerd",
+        "otf-hermit-nerd",
+        "otf-monaspace-nerd",
+        "otf-opendyslexic-nerd",
+        "otf-overpass-nerd",
+        "papirus-icon-theme",
+        "pavucontrol",
+        "picom",
+        "polkit-gnome",
+        "polybar",
+        "poppler-glib",
+        "pyenv",
+        "python-pip",
+        "rclone",
+        "ripgrep",
+        "rofi",
+        "rsync",
+        "stow",
+        "stylua",
+        "thunar",
+        "thunar-volman",
+        "tree-sitter-cli",
+        "ttf-nerd-fonts-symbols",
+        "ttf-nerd-fonts-symbols-mono",
+        "ttf-jetbrains-mono-nerd",
+        "ttf-firacode-nerd",
+        "tumbler",
+        "udiskie",
+        "udisks2",
+        "ufw",
+        "unrar",
+        "unzip",
+        "vivaldi",
+        "vivaldi-ffmpeg-codecs",
+        "vlc",
+        "vlc-plugins-all",
+        "vlc-plugins-extra",
+        "wmctrl",
+        "xclip",
+        "xdg-user-dirs",
+        "xdotool",
+        "yt-dlp",
+        "zip"
+    ],
+    "pacman_config": {
+        "color": true,
+        "parallel_downloads": 5
+    },
+    "profile_config": {
+        "gfx_driver": "All open-source",
+        "greeter": "lightdm-gtk-greeter",
+        "profile": {
+            "custom_settings": {
+                "Bspwm": {}
+            },
+            "details": [
+                "Bspwm"
+            ],
+            "main": "Desktop"
+        }
+    },
+    "script": null,
+    "services": [
+        "NetworkManager",
+        "lightdm"
+    ],
+    "swap": {
+        "algorithm": "zstd",
+        "enabled": true
+    },
+    "timezone": "Mexico/General",
+    "version": "4.4"
+}

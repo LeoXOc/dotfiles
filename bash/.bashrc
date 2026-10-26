@@ -19,9 +19,9 @@ eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 
 alias disk='lsblk -f && df -h'
-alias ll='ls -lahF'
-alias la='ls -CFRr'
-alias l='ls -lhF'
+alias l='ls -F'
+alias ll='ls -lhF'
+alias la='ls -lahF'
 alias lr='ls -lahCFR'
 alias update='sudo pacman -Syu --needed && yay -Syu --needed'
 alias ins='sudo pacman -S --needed'
@@ -41,6 +41,11 @@ alias es='sudo localectl set-x11-keymap es'
 alias vff='vim ~/.config/fastfetch/config.jsonc'
 alias pmain="python main.py"
 alias pbar='pkill polybar && ~/.config/polybar/launch.sh &'
+alias ff='clear && fastfetch && ls -F'
+alias keys='cat ~/.config/sxhkd/sxhkdrc'
+alias name='xprop | grep WM_CLASS'
+alias search='pacman -Ss'
+alias nvidia='watch -n 2 nvidia-smi'
 
 s() {
     sleep $1m && pplay ~/Música/Alerts/mixkit-clear-announce-tones-2861.wav && echo "Alarma finalizada! - $1m"

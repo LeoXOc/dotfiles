@@ -6,6 +6,7 @@ base-devel
 btop
 clamav
 clamtk
+cava
 dkms
 fastfetch
 feh
@@ -67,6 +68,7 @@ rclone
 ripgrep
 rofi
 rsync
+stow
 stylua
 thunar
 thunar-volman
