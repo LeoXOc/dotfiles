@@ -37,11 +37,13 @@ Bash:
 Copia la cadena generada (que empezará con $6$) y pégala en los valores de tu archivo de credenciales.
 
 
-# Uso e Instalación1. Prepara tu medio de instalación
+# Uso e Instalación
 
-Asegúrate de tener tus archivos user_configuration.json y user_credentials.json guardados en la raíz de una memoria USB formateada en FAT32.2. 
+## 1. Prepara tu medio de instalación
 
-Inicia el entorno Live de Arch Linux
+Asegúrate de tener tus archivos user_configuration.json y user_credentials.json guardados en la raíz de una memoria USB formateada en FAT32.
+
+## 2. Inicia el entorno Live de Arch Linux
 
 Arranca tu equipo usando la ISO oficial de Arch Linux. Una vez que te reciba la consola principal (letras rojas), identifica el nombre que el sistema le asignó a tu memoria USB ejecutando:
 
@@ -49,7 +51,7 @@ Bash:
     
     lsblk
 
-3. Monta la memoria USB
+## 3. Monta la memoria USB
 
 Crea un punto de montaje y conecta la memoria (sustituye sdb1 por el identificador exacto de tu partición USB):
 
@@ -58,7 +60,7 @@ Bash:
     mkdir -p /mnt/usb
     mount /dev/sdb1 /mnt/usb
 
-4. Ejecuta archinstall
+## 4. Ejecuta archinstall
 
 Lanza el instalador nativo pasándole las rutas absolutas de tus archivos JSON como parámetros. Si la configuración es válida, la instalación y compilación comenzarán de forma completamente desatendida:
 
