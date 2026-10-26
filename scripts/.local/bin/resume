@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Directorio de origen (o el actual '.' si no se indica nada)
+directorio="${1:-.}"
+out="${2:-resumen}"
+
+output="$HOME/$out"
+
+if [ -f "$output" ]; then
+  rm "$output"
+else
+  touch $output
+fi
+# Limpiar el archivo de salida
+> "$output"
+
+# Verificar que el directorio exista
+if [[ ! -d "$directorio" ]]; then
+    echo "Error: '$directorio' no es un directorio válido."
+    exit 1
+fi
+
+# Usamos -prune para ignorar directorios ocultos de forma eficiente
+# Dividimos el comando find en varias líneas con '\' para que sea más fácil de leer
+find "$directorio" \
+    -type d -name ".*" ! -name "." ! -name "logs" ! -name "log" -prune -o \
+    -type f ! -name "__init__.py" ! -name "*.pyc" ! -name "*.log" ! -name "*log*.txt" ! -name "*.m3u" \
+    ! -path "*$output" ! -path "*resumen" -print | while read -r archivo; do
+
+    # Extraer la ruta sin el archivo (ej: /home/user/project)
+    ruta_base=$(dirname "$archivo")
+
+    # Extraer solo el nombre de la carpeta padre (ej: project)
+    carpeta_padre=$(basename "$ruta_base")
+
+    # Extraer solo el nombre del archivo (ej: main.py)
+    archivo_base=$(basename "$archivo")
+
+    # Unir ambos con una barra para el formato final (ej: project/main.py)
+    nombre="$carpeta_padre/$archivo_base"
+
+    # Escribir nombre, saltos de línea y contenido
+    printf "\n\n#PATH: %s:\n\n" "$nombre" >> "$output"
+    cat "$archivo" >> "$output"
+
+done
+
+echo "Proceso completado sin errores en '$directorio'."

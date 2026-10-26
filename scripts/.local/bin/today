@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Obtenemos la fecha en formato YYYYY/MM/DD
+fecha=$(date +%Y/%m/%d)
+
+# Si el script recibe un argumento ($1), lo usa como base.
+# Si no recibe nada, usa el directorio actual (.) por defecto.
+ruta_base="${1:-.}"
+
+# Unimos la base con la fecha
+ruta_completa="$ruta_base/$fecha"
+
+# Creamos el directorio y sus padres si no existen (-p ignora si ya existe)
+mkdir -p "$ruta_completa"
+
+# Imprimimos la ruta absoluta resolviendo cualquier ".." o "./"
+# Esto es crucial para que Python u otro script reciba una ruta limpia y real
+realpath "$ruta_completa"
